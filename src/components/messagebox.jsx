@@ -156,12 +156,12 @@ const handleKeyPress = (e) => {
       {/* <div className="row ptqsdqs-3"sqd> */}
         <div className="chat-main">
           <div className="col-md-12 chat-header rounded-top bg-primary text-white">
-            <div className="row">
+            <div className="row m-1">
               <div className="col-md-6 username pl-2">
                 <i className="fa fa-circle text-success" aria-hidden="true"></i>
                 <h6 className="m-0">{username}</h6>
               </div>
-              <div className="col-md-6 options text-right pr-2 d-flex justify-content-between align-items-center">
+              <div className="col-md-6 options text-right pr-2 d-flex justify-content-between align-items-center ">
                     <i className="fa fa-plus icon-spacing" aria-hidden="true"></i>
                     <i className="fa fa-circle text-success live-video icon-spacing" aria-hidden="true"></i>
                     <i className="fa fa-phone icon-spacing" aria-hidden="true"></i>
