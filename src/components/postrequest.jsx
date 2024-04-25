@@ -24,7 +24,7 @@ function PostForm({ onPostSuccess }) {
   const [activeTab, setActiveTab] = useState('posts');
   const [text, setText] = useState('');
   const [file, setFile] = useState(null);
-  const token = Cookies.get('token'); // Ensure you replace 'your_token_here' with the actual token
+  const token = Cookies.get('token'); 
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -52,16 +52,19 @@ function PostForm({ onPostSuccess }) {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ content_text: text }) // Senggugud only text as JSON
+        body: JSON.stringify({ content_text: text }) 
       });
       const responseData = await response.json();
       console.log(responseData);
       
       const userinfo = await getUserinfo(responseData.post.user_id);
-      Object.assign(responseData.post, userinfo); // Merge userinfo into the post object
+      let userInfoCopy = {...userinfo};
+      delete userInfoCopy.id; 
+      responseData.post.displayed_id = responseData.displayed.id;
+      Object.assign(responseData.post, userInfoCopy);
       const postinfo = responseData.post;
       console.log(postinfo);
-      onPostSuccess(postinfo); // Call the onPostSuccess function passed as a prop
+      onPostSuccess(postinfo); 
       handleClearingText();
     } catch (error) {
       console.error('Error posting data:', error);

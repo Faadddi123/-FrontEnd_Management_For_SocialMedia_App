@@ -9,6 +9,14 @@ import NearbyUsers from "./components/requestusers";
 import Postrequest from "./components/postrequest";
 import PostCard from "./components/postcard";
 import Timepassed from "./components/timepassed";
+import Navbar from './components/navbar';
+import Profile_name from './components/profile_name';
+import Sidebar from './components/sidebar';
+import Inputform from './components/inputform';
+import PostForm from './components/postform';
+import Messageelements from './components/messageelements';
+import CustomizeTheme from './components/customisation';
+import {  ThemeModalProvider } from './context/thememodal';
 import { event } from 'jquery';
 import './App.css' ;
 function NavigationHandler() {
@@ -82,8 +90,8 @@ function App() {
   const [postinfosspecifique , setpostinfosspecifique] = useState([]);
   const [SharedContent , setSharedContent] = useState([]);
   useEffect(() => {
-    fetchPosts();
     getUserinfo();
+    fetchPosts();
     
   }, []);
 
@@ -205,6 +213,7 @@ function App() {
 
   const handleNewPost = (newPost) => {
     setPosts(prevPosts => [newPost, ...prevPosts]);
+    console.log(posts);
   };
 
   const handleTextChangeForShareInput = (event) => {
@@ -245,7 +254,7 @@ function App() {
   async function handleShareClick() {
     const inputText = TextForShare; // Assuming TextForShare is the state holding the input text
     const postId = currentPostId.id; // Assuming currentPostId holds the post data and has an id property
-    console.log(postId)
+    console.log(currentPostId)
     const token = Cookies.get('token');
     if (!token) {
       console.error('No token available');
@@ -273,8 +282,21 @@ function App() {
   return (
   <Router>
     <NavigationHandler />
+    <Navbar />
     <Routes>
-      <Route path="/login" element={<LittleLoginForm />} />
+      <Route path="/login" element={
+      <main>
+        <div className="container">
+          <div className="middle">
+
+            <LittleLoginForm />
+          </div>
+
+
+        </div>
+
+      </main>
+      } />
       <Route path="/register" element={<LittleRegisterForm />} />
       <Route path="/messages" element={<Messageform />} />
       <Route path="/" element={<Navigate replace to="/login" />} />
@@ -299,7 +321,7 @@ function App() {
                 <div>
                   {posts.map(post => (
                     
-                      <PostCard key={0.5*(post.id + post.partage_id)*(post.id + post.partage_id +  1) + post.partage_id} id={post.displayed_id} Content={post} HaveShare={true} user_id = {infouserinfo.id}  partaged_iiiid = {post.partage_id} idofdisplayed = {post.id} onShare={() => handleShare(post)} />
+                      <PostCard key={0.5*(post.id + post.partage_id)*(post.id + post.partage_id +  1) + post.partage_id} id={post.displayed_id} Content={post} HaveShare={true}  partaged_iiiid = {post.partage_id} user = {infouserinfo} idofdisplayed = {post.id} onShare={() => handleShare(post)} />
                      
                   ))}
                 </div>
@@ -308,45 +330,100 @@ function App() {
           </div>
         </div>
       } />
-    </Routes>
-    {isSharing && (
-        <div className="overlay">
-          <div className="card gedf-card">
-            <div className="card-header">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="mr-2">  
-                  {/*  */}
-                  <img className="rounded-circle" src="https://picsum.photos/50/50" width="45" alt="" />
+      <Route path="/messagess" element={
+        <>
+        <ThemeModalProvider>
+          <main>
+            <div className="container">
+              <div className="left">
+                <Profile_name />
+                <Sidebar />
+              </div>
+              <div className="middle">
+                <Inputform  onPostSuccess={handleNewPost}/>
+                <div className="feeds">
+                {posts.map(post => (
+                <PostForm key={0.5*(post.id + post.partage_id)*(post.id + post.partage_id +  1) + post.partage_id} id={post.displayed_id} Content={post} HaveShare={true}  partaged_iiiid = {post.partage_id} user = {infouserinfo} idofdisplayed = {post.id} onShare={() => handleShare(post)} />
+              ))}
                 </div>
-                <div className="m-2">
-                  
-                  <div className="h5 m-0 " >{infouserinfo.user_name}</div>
+
+              </div>
+              <div className="right">
+                <div className="messages">
+
+                  <Messageelements onAddMessageBox={handleAddMessageBox}/>
                 </div>
-                <div>
-                  <div className="dropdown">
-                    <button className="fa fa-times border-0  btn-primary  " type="button"  onClick={() => setIsSharing(false)}>
-                    </button>
-                    
-                  </div>
-                </div>
+
               </div>
             </div>
-            <div className="card-body">
-              <p className="card-text">
-              <input className="h5 m-0 rounded border-0" placeholder='type here ...' value={TextForShare} onChange={handleTextChangeForShareInput}/>
-              </p>
-              <p className="card-text">
-              <PostCard key={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} id
-                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId} user_id = {infouserinfo.id}  onShare={() => handleShare(currentPostId)} />
-              </p>
-            </div>
-            <div className="card-footer">
-              <button className="card-link btn btn-primary" onClick={handleShareClick}>
-                <i className="fa fa-mail-forward "></i> Share
-              </button>
-            </div>
+          </main>
+
+          <CustomizeTheme />
+        
+        </ThemeModalProvider>
+        </>
+      } />
+    </Routes>
+    {isSharing && (
+      <div className="overlay">
+        <div className="feed">
+          <div className="head">
+              <div className="user">
+                  <div className="profile-photo">
+                      <img src="./images/profile-13.jpg" />
+                  </div>
+                  <div className="info">
+                      <h3>{infouserinfo.user_name}</h3>
+                      
+                  </div>
+              </div>
+              <span className="edit" onClick={() => setIsSharing(false)}>
+                  <i className="uil uil-multiply"></i>
+              </span>
+          </div>
+          <div>
+          <input className="" placeholder='type here ...' value={TextForShare} onChange={handleTextChangeForShareInput}/>
+          <hr />
+          </div>
+          <div className='shared-post'>
+          <PostForm key={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} id
+                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId}   onShare={() => handleShare(currentPostId)} />
+          </div>
+          <div className="photo">
+              {/* <img src="./images/profile-13.jpg" alt="Profile" />
+               */}
+               
+          </div>
+
+          <div className="action-buttons">
+              <div className="interaction-buttons">
+                  {/* <span><i className="uil uil-heart"></i></span>
+                  <span><i className="uil uil-comment-dots"></i></span> */}
+                  <span onClick={handleShareClick}><i className="uil uil-share-alt"></i></span>
+              </div>
+              <div className="bookmark">
+                  <span><i className="uil uil-bookmark-full"></i></span>
+              </div>
+          </div>
+
+          <div className="liked-by">
+              <span><img src="./images/profile-10.jpg" /></span>
+              <span><img src="./images/profile-4.jpg" /></span>
+              <span><img src="./images/profile-15.jpg" /></span>
+              <p>Liked by <b>Ernest Achiever</b> and <b>2, 323 others</b></p>
+          </div>
+
+          <div className="caption">
+              <p><b>Lana Rose</b> Lorem ipsum dolor sit quisquam eius. 
+              <span className="harsh-tag">#lifestyle</span></p>
+          </div>
+
+          <div className="comments text-muted">
+              View all 277 comments
           </div>
         </div>
+
+      </div>  
     )}
   </Router>
 );
