@@ -16,7 +16,8 @@ import Inputform from './components/inputform';
 import PostForm from './components/postform';
 import Messageelements from './components/messageelements';
 import CustomizeTheme from './components/customisation';
-import {  ThemeModalProvider } from './context/thememodal';
+import { ThemeModalProvider } from './context/thememodal';
+import SendPic from './components/SendImage/MediaUpload';
 import { event } from 'jquery';
 import './App.css' ;
 function NavigationHandler() {
@@ -334,16 +335,18 @@ function App() {
         <>
         <ThemeModalProvider>
           <main>
+            
             <div className="container">
               <div className="left">
                 <Profile_name />
+                
                 <Sidebar />
               </div>
               <div className="middle">
                 <Inputform  onPostSuccess={handleNewPost}/>
                 <div className="feeds">
                 {posts.map(post => (
-                <PostForm key={0.5*(post.id + post.partage_id)*(post.id + post.partage_id +  1) + post.partage_id} id={post.displayed_id} Content={post} HaveShare={true}  partaged_iiiid = {post.partage_id} user = {infouserinfo} idofdisplayed = {post.id} onShare={() => handleShare(post)} />
+                <PostForm key={0.5*(post.id + post.partage_id)*(post.id + post.partage_id +  1) + post.partage_id} id={post.displayed_id} Content={post} HaveShare={true}  for_sharing={true} partaged_iiiid = {post.partage_id} user = {infouserinfo} idofdisplayed = {post.id} onShare={() => handleShare(post)} />
               ))}
                 </div>
 
@@ -370,30 +373,30 @@ function App() {
           <div className="head">
               <div className="user">
                   <div className="profile-photo">
-                      <img src="./images/profile-13.jpg" />
+                      <img src="./assets/images/profile-13.jpg" alt='pic'/>
                   </div>
                   <div className="info">
                       <h3>{infouserinfo.user_name}</h3>
                       
                   </div>
               </div>
-              <span className="edit" onClick={() => setIsSharing(false)}>
+              <span className="edit " onClick={() => setIsSharing(false)}>
                   <i className="uil uil-multiply"></i>
               </span>
           </div>
           <div>
-          <input className="" placeholder='type here ...' value={TextForShare} onChange={handleTextChangeForShareInput}/>
+          <input className="Input-for-overlay input-container" placeholder='type here ...' value={TextForShare} onChange={handleTextChangeForShareInput}/>
           <hr />
           </div>
-          <div className='shared-post'>
+          <div className='shared-post original-shared'>
           <PostForm key={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} id
-                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId}   onShare={() => handleShare(currentPostId)} />
+                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId} for_sharing = {true}  onShare={() => handleShare(currentPostId)} />
           </div>
-          <div className="photo">
-              {/* <img src="./images/profile-13.jpg" alt="Profile" />
-               */}
+          {/* <div className="photo">
+              <img src="./images/profile-13.jpg" alt="Profile" />
+              
                
-          </div>
+          </div> */}
 
           <div className="action-buttons">
               <div className="interaction-buttons">
@@ -401,26 +404,12 @@ function App() {
                   <span><i className="uil uil-comment-dots"></i></span> */}
                   <span onClick={handleShareClick}><i className="uil uil-share-alt"></i></span>
               </div>
-              <div className="bookmark">
+              {/* <div className="bookmark">
                   <span><i className="uil uil-bookmark-full"></i></span>
-              </div>
+              </div> */}
           </div>
 
-          <div className="liked-by">
-              <span><img src="./images/profile-10.jpg" /></span>
-              <span><img src="./images/profile-4.jpg" /></span>
-              <span><img src="./images/profile-15.jpg" /></span>
-              <p>Liked by <b>Ernest Achiever</b> and <b>2, 323 others</b></p>
-          </div>
-
-          <div className="caption">
-              <p><b>Lana Rose</b> Lorem ipsum dolor sit quisquam eius. 
-              <span className="harsh-tag">#lifestyle</span></p>
-          </div>
-
-          <div className="comments text-muted">
-              View all 277 comments
-          </div>
+          
         </div>
 
       </div>  

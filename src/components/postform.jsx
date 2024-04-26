@@ -3,7 +3,7 @@ import React , {useEffect , useState} from "react";
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import Timepassed from "./timepassed";
-import Comment_visibility from './commentform';
+import Comment_displaying from './elements/comment_for_post';
 
 Feed.propTypes = {
     Content: PropTypes.object.isRequired,
@@ -62,12 +62,38 @@ async function handlePostComment(id, setComments, user) {
   }
 }
 function Feed(props) {
-    const { Content, onShare, id, HaveShare, partaged_iiiid , user} = props;
+    const { Content, onShare, id, HaveShare, partaged_iiiid , user , for_sharing} = props;
     const [content, setContent] = useState(Content);
     const [comments, setComments] = useState([]);
     const [commentVisibility, setCommentVisibility] = useState({});
     const [loadCount, setLoadCount] = useState(0);
-  
+    const [activeHearts, setActiveHearts] = useState({}); 
+    const [imageUrl, setImageUrl] = useState('');
+
+
+    const toggleHeartActive = (contentId) => {
+      setActiveHearts(prevState => ({
+          ...prevState,
+          [contentId]: !prevState[contentId]
+      }));
+  };
+
+useEffect(() => {
+    if (content.element_type !== 'nothing' && content.element_path !== 'nothing' && (HaveShare || for_sharing)) {
+        fetch(`http://localhost/api/media/checkback/${content.element_path}`, {
+            headers: {
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+        })
+        .then(response => response.blob()) // Handling the response as
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            setImageUrl(url); // Set the image URL for 
+            console.log('Deployment successful:', url);
+        })
+        .catch(error => console.error('Error fetching media:', error));
+    }
+}, [content.element_type, content.element_path]);
     useEffect(() => {
       setLoadCount(prevCount => prevCount + 1);
     }, []);
@@ -105,13 +131,14 @@ function Feed(props) {
                 )}
                 </span>
             </div>
-            <div>
-            {partaged_iiiid ? content.text : content.content_text}
+            <div className="post-text">
+              {partaged_iiiid ? content.text : content.content_text}
+              {content.element_type == 'nothing' ? "hhhhhhhhhhh" : "nnnnnn"}
 
             </div>
             {partaged_iiiid ?
             <div className='shared-post'>
-            
+                    
                     <Feed 
                     key={0.5 * (content.id + content.partage_id) * (content.id + content.partage_id + 1) + content.partage_id}
                     HaveShare={false}
@@ -123,9 +150,13 @@ function Feed(props) {
                 
             </div>
             : null}
-            <div className="photo">
             
-                {/* <img src="./images/feed-1.jpg" alt="Feed"/>*/}
+            <div className="photo">
+                {content.element_path && HaveShare ? 
+                 <img src={imageUrl} alt="Feed"/>
+                :
+                null }
+                
  
             </div>
 
@@ -133,7 +164,7 @@ function Feed(props) {
                 {HaveShare && (
                     <>
                         <div className="interaction-buttons">
-                            <span><i className="uil uil-heart"></i></span>
+                        <span id={`heartfor${content.id}`} onClick={() => toggleHeartActive(content.id)}><i className={`uil uil-heart ${activeHearts[content.id] ? 'active' : ''}`}></i></span>
                             <span   onClick={() => handleToggleComment(id)}><i className="uil uil-comment-dots"></i></span>
                             <span  onClick={(e) => { e.preventDefault(); onShare(); }}><i className="uil uil-share-alt"></i></span>
                         </div>
@@ -147,7 +178,7 @@ function Feed(props) {
             </div>
             {HaveShare && (
             <>
-                <div className="liked-by">
+                {/* <div className="liked-by">
                     <span><img src="./images/profile-10.jpg" alt="Profile 10"/></span>
                     <span><img src="./images/profile-4.jpg" alt="Profile 4"/></span>
                     <span><img src="./images/profile-15.jpg" alt="Profile 15"/></span>
@@ -157,15 +188,35 @@ function Feed(props) {
                 <div className="caption">
                     <p><b>Lana Rose</b> Lorem ipsum dolor sit quisquam eius. 
                     <span className="harsh-tag">#lifestyle</span></p>
-                </div>
-
-                <div className="comments text-muted">
+                </div> */}
+                <a className="cursor-pointer">
+                {!commentVisibility[id] && (
+                  <div className="comments text-muted" onClick={(e) => { e.preventDefault(); fetchCommentsForDisplayedId(content.displayed_id, setComments, setCommentVisibility); }}>
                     View all 277 comments
-                </div>
+                      
+                  </div>
+                )}
+                </a>
+                {commentVisibility[id] && comments.map(comment => (
+                  <div class="comments_displayed">
+                    <Comment_displaying 
+                    key={0.5 * (comment.id + comment.displayed_id) * (comment.id + comment.displayed_id + 1) + comment.displayed_id}
+                    userName={comment.user.name}
+                    postTime={comment.created_at}
+                    postContent={comment.text}
+                    commenttt = {comment}
+                    />
+                  </div>
+                
+                ))}
                 {commentVisibility[id] && (
+                  
                 <div className="addComments">
                 <div className="reaction">
                   <h3><i className="far fa-smile"></i></h3>
+                  {/* ddddddddddddd */}
+                  
+                  {/* ddddddddd */}
                 </div>
                 <input type="text"
                        className="text"
