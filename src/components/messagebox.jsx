@@ -1,5 +1,5 @@
 import { useState , useEffect} from "react";
-import "./css/messagebox.css"; //sdssdssqdfqsdsqdsqsqcscsdsqdqs
+// import "./css/messagebox.css"; //sdssdssqdfqsdsqdsqsqcscsdsqdqs
 import Cookies from 'js-cookie';
 import $ from 'jquery';
 function MessageBox({ initialReceiverId, componentKey }) {
@@ -152,26 +152,23 @@ const handleKeyPress = (e) => {
 //   if (!isVisible) return null;
 
   return (
-    <div className="container">
-      {/* <div className="row ptqsdqs-3"sqd> */}
+   
+      
         <div className="chat-main">
-          <div className="col-md-12 chat-header rounded-top bg-primary text-white">
-            <div className="row m-1">
+          <div className=" chat-header ">
+            <div className="message-bar">
               <div className="col-md-6 username pl-2">
-                <i className="fa fa-circle text-success" aria-hidden="true"></i>
                 <h6 className="m-0">{username}</h6>
               </div>
-              <div className="col-md-6 options text-right pr-2 d-flex justify-content-between align-items-center ">
-                    <i className="fa fa-plus icon-spacing" aria-hidden="true"></i>
-                    <i className="fa fa-circle text-success live-video icon-spacing" aria-hidden="true"></i>
-                    <i className="fa fa-phone icon-spacing" aria-hidden="true"></i>
-                    <i className="fa fa-cog icon-spacing" aria-hidden="true"></i>
-                    <i className={`fa fa-times hide-chat-box${componentKey}`} aria-hidden="true" onClick={handleClose}></i>                </div>
+              <div className="options">
+                    <i className="uil uil-plus icon-spacing" aria-hidden="true" onClick={handleClose}></i>
+                    {/* <i className="fa fa-circle text-sulive-video icon-spacing" aria-hidden="true"></i> */}
+                    <i className={`uil uil-times hide-chat-box${componentKey}`} aria-hidden="true" ></i>                </div>
 
             </div>
           </div>
           <div className={`chat-content${componentKey}`}>
-            <div className="col-md-12 chats border bg-white">
+            <div className=" chats">
               <ul className="p-0">
                 {/* messaxxge sended */}
                 {messages.map((message, index) => (
@@ -180,33 +177,33 @@ const handleKeyPress = (e) => {
                         <div className="p-1">{message.text}</div>
                     </li>
                     :
-                    <li key={index} className="p-1 rounded mb-1">
+                    <li key={index} className="">
                         <div className="receive-msg">
-                        <div className="receive-msg-desc text-center mt-1 ml-1 pl-2 pr-2">
-                            <p className="pl-2 pr-2 rounded-pill">
-                              <div className="p-1">
-                                {message.text}
-                              </div>
-                            </p>
-                        </div>
+                          <div className="receive-msg-desc ">
+                              <p className="">
+                                <div className="">
+                                  {message.text}
+                                </div>
+                              </p>
+                          </div>
                         </div>
                     </li>
                     ))}
               </ul>
             </div>
-            <div className="col-md-12 message-box border pl-2 pr-2 border-top-0 bg-white">
+            <div className="message-input">
               <input type="text"                 
                 value={inputText}
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
-                className="pl-0 pr-0 w-100" placeholder="Type a message..." />
-              <div className="tools">
+                className="" placeholder="Type a message..." />
+              <div className="uil tabler--send">
               </div>
             </div>
           </div>
         </div>
-      {/* </div> */}
-    </div>
+      
+    
   );
 }
 

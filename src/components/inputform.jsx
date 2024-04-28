@@ -1,6 +1,6 @@
 import React, { useState , useRef} from 'react';
 import Cookies from 'js-cookie';
-
+import axios from 'axios';
 
 async function getUserinfo(id) {
     const token = Cookies.get('token'); // Ensure you have qsddsaccess to 'Cookies'
@@ -55,9 +55,9 @@ function CreatePost({ onPostSuccess }) {
     if (file) {
         formData.append('media', file);
     }
-    // if (postContent.trim()) {
-    //     formData.append('content_text', postContent);
-    // }
+    if (postContent.trim()) {
+        formData.append('content_text', postContent);
+    }
 
     console.log(postContent);
    

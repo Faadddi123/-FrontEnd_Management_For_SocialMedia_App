@@ -16,7 +16,7 @@
     --color-danger: hsl(0, 95%, 65%);
     --color-dark: hsl(252, 30%, var(--dark-color-lightness));
     --color-black: hsl(252, 30%, 10%);
-
+    --border-radui-for-chat-box:1rem;
     --border-radius: 2rem;
     --card-border-radius: 1rem;
     --btn-padding: 0.6rem 2rem;
@@ -37,7 +37,27 @@
     list-style: none;
     border: none;
 }
+/* Styling the scrollbar for WebKit browsers */
+html::-webkit-scrollbar {
+    width: 10px; /* Width of the vertical scrollbar */
+}
 
+html::-webkit-scrollbar-track {
+    background: var(--color-light); /* Color of the scrollbar track */
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary); /* Color of the scrollbar thumb */
+    border-radius: 5px; /* Rounded corners of the scrollbar thumb */
+    border: 2px solid var(--color-black); /* Creates a border around the scrollbar thumb */
+    box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Styling the scrollbar for Firefox */
+html {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: var(--color-primary) var(--color-light); /* thumb and track color */
+}
 body {
     font-family: 'Poppins', sans-serif;
     color: var(--color-dark);
@@ -243,7 +263,213 @@ main .container .left .profile {
 }
 
 /* =============== Middle ============== */
+/* ================== Message_box =================*/
+.row {
+  
+  
+    
+  width: 100%;
+  display: flex; 
+}
 
+.message-box {
+
+  width: 17%; /* Each krow */
+  box-sizing: border-box;
+  position: fixed;
+    align-items: center;
+    z-index: 10;
+    bottom: 0;
+  margin: 0 30px 2px 0; /* Optional: Adds slight space between each message box */
+  border-top-left-radius: var(--border-radius-for-chat-box);
+  border-top-right-radius: var(--border-radius-for-chat-box);
+  box-shadow: 0px 25px 20px 0 var(--color-primary);
+}
+
+/* Specific classes for each individualoning if needed */
+.col-1 { order: 1; right: 0%; }
+.col-2 { order: 2; right: 25%;}
+.col-3 { order: 3; right: 50%;}
+.col-4 { order: 4; right: 75%;}
+/* .chat-main {
+    position: fixed;
+    width: 20%;
+    bottom: 0;
+
+    
+
+    border: 1px solid var(--color-primary);
+    
+} */
+.chat-main {
+
+    
+    width: 100%;
+}
+
+.chat-header{
+    border-top-left-radius: var(--border-radui-for-chat-box);
+    border-top-right-radius: var(--border-radui-for-chat-box);
+    
+    box-shadow: 0px 0px 20px 0 var(--color-primary);
+    background: var(--color-primary);
+    padding-top: 1px;
+    padding-bottom: 25px;
+    height: 20px;
+}
+.chat-header .message-bar{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.username i{
+    font-size: 9px; 
+    
+    /* c: ; */
+}
+.username h6{
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-white);
+}
+.options i{
+    font-size: 14px;
+    font-weight: normal;
+    opacity: 0.7;
+    color: var(--color-white);
+    cursor: pointer;
+}
+.options i:hover{
+
+    opacity: 1;
+    color: var(--color-dark);
+    cursor: pointer;
+}
+/* ========= scroll changinggg =========== */
+.chats::-webkit-scrollbar {
+    width: 8px; /* Width of the vertical scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+}
+
+.chats::-webkit-scrollbar-track {
+    background: var(--color-light); /* Color of the scrollbar track */
+}
+
+.chats::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners of thscrollbar thumb */
+    border: 2px solid var(--color-light); /* Creates a border around the scrollbar thumb */
+}
+/* ==============end of changing scroll ==========   */ 
+.chats{
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: var(--color-primary) var(--color-light); /* thumb and track color */
+
+    height: 260px;
+    overflow-x: scroll;
+    overflow-x: hidden;
+    background-color: var(--color-light);
+    padding-top: 1%;
+}
+.chats ul li{
+    list-style: none;
+    clear: both;
+    font-size: 13px;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    border-radius: var(--border-radius);
+    color: var(--color-white);
+    margin-bottom: 0.5rem;
+    /* bsdd; */
+}
+.chats .send-msg{
+    border-radius: var(--border-radius);
+    float: right;
+    background-color: var(--color-primary);
+    padding-left: 4%;
+    padding-right: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.receive-msg {
+    
+    
+    margin-top: 2%;
+    
+    border-radius: var(--border-radius);
+}
+.receive-msg .receive-msg-desc{
+
+    display: inline-block;
+}
+.receive-msg .receive-msg-desc p{
+
+    border-radius: var(--border-radius);
+    background: var(--color-grey);
+
+}
+.receive-msg .receive-msg-desc p div{
+    /* bsdd; */
+    padding-left: 0.4rem;
+    padding-right: 0.3rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.2rem;
+}
+/* .message-box{
+    background-color: var(--color-white);
+    color: var(--color-dark);
+    border: 1px solid var(--color-dark);
+}
+.message-box input{
+    background-color: var(--color-white);
+    color: var(--color-dark);
+    
+    height: 100%;
+    font-size: 13px;
+    opacity: 1;
+}
+.message-box input:focus{
+    outline: none;
+    
+} */
+.message-input {
+    background-color: var(--color-white);
+    color: var(--color-dark);
+    padding-left: 8px; /* Equivalent to pl-2 in Bootstrap */
+    padding-right: 8px;
+
+    
+    display: flex; /* Enee */
+    align-items: center;
+    border-top: none; 
+    /* display: flex;  */
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    
+}
+
+.message-input input {
+    background-color: var(--color-white);
+    color: var(--color-dark);
+    height: 100%;
+    font-size: 13px;
+    opacity: 1;
+    border: none; 
+    flex-grow: 1; 
+}
+
+.message-input input:focus {
+    outline: none;
+}
+.tools i{
+    color: #a1a1a1;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 6px;
+}
 /* =============== Create Post ============== */
 .middle .create-post {
     width: 100%;
@@ -301,10 +527,19 @@ main .container .left .profile {
     gap: 1rem;
 }
 
-.middle .feed .photo ,.overlay .feed .photo{
+.middle .feed .photo, .overlay .feed .photo {
     border-radius: var(--card-border-radius);
     overflow: hidden;
     margin: 0.7rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.middle .feed .photo video, .overlay .feed .photo video {
+    width: 100%; /* Ensures the video takes the full width of the container */
+    height: auto; /* Maintains the aspect ratio of the video */
+    max-height: 100%; /* Ensures the video does not exceed the container's height */
 }
 .middle .feed .post-text ,.overlay .feed .post-text{
     border-radius: 0;
@@ -368,7 +603,7 @@ main .container .left .profile {
     margin-bottom: 1rem; 
     height: 2rem;
     /* border: 1px solid ; */
-    box-shadow: -4px -2px 8px 0 var(--color-dark); /* Added shadow */
+    box-shadow: -4px -4px 7px 0 var(--color-dark); /* Added shadow */
 }
 
 .middle .liked-by ,.overlay .liked-by{
@@ -524,6 +759,8 @@ main .container .right {
     bottom: 0;
 }
 
+
+
 /* =============== Messages ============== */
 .right .messages {
     background: var(--color-white);
@@ -640,7 +877,7 @@ main .container .right {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100%;
+    z-index: 100;
     text-align: center;
     display: grid;
     place-items: center;
@@ -800,11 +1037,116 @@ main .container .right {
     align-items: center;
     transition: backdrop-filter 1s ease-in-out;
   }
+
+  /* =============== Login ===============*/
+  .Login , .Register{
+    
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    
+}
+
+.Login .card , .Register .card{
+    background: var(--color-white);
+    padding: 3rem;
+    border-radius: var(--card-border-radius);
+    width: 30%;
+    box-shadow: 0 0 1rem var(--color-primary);
+}
+.Login .card > div , .Register .card > div{
+    display: flex;
+    
+}
+.Login .card input , .Register .card input{
+    width: 100%; 
+    padding: 0.8rem 1rem; 
+    font-size: 1rem; /* Adequate font size for readability */
+    border: 2px solid var(--color-primary); /* Border color using primary color variable */
+    border-radius: var(--card-border-radius); /* Consistent border-radius with the card */
+    background: var(--color-white); /* Background color */
+    outline: none; /* Removes the default focus outline */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effects */
+}
+
+
+.Login .card input:focus , .Register .card input:focus{
+    border-color: var(--color-primary-light); /* Lighter primary color for focus */
+    box-shadow: 0 0 8px var(--color-primary-glow); /* Glowing effect on focus */
+}
+.Login .card button , .Register .card button{
+    padding: 0.8rem 1.5rem; /* Comfortable padding */
+    font-size: 1rem; /* Adequate font size for readability */
+    color: var(--color-white); /* Text color */
+    background-color: var(--color-primary); /* Button background color */
+    border: none; /* No border */
+    border-radius: var(--card-border-radius); /* Consistent border-radius with the card */
+    cursor: pointer; /* Pointer cursor on hover */
+    outline: none; 
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover and focus effects */
+}
+
+.Login .card button:hover, .Login button:focus , .Register .card button:hover , .Register button:focus{
+    background-color: var(--color-dark); 
+    box-shadow: 0 0 12px var(--color-primary); 
+}
+.Register .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Adds space between inputs */
+}
+
+.Register .card input[type="file"] {
+    display: none; /* Hides the default file input */
+}
+
+.Register .card label[for="file-upload"] {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border-radius: var(--card-border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.Register .card label[for="file-upload"]:hover {
+    background-color: var(--color-primary-light);
+    box-shadow: 0 0 12px var(--color-primary-glow);
+}
+
+.Register .card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary-glow);
+}
 /* ================= 
 MEDIA QUERIES FOR SMALL LAPTOP AND BIG TABLETS 
 ==================== */
 
 @media screen and (max-width: 1200px) {
+    .message-box {
+        width: 20%; /* Each box kes 25% of the row */
+        box-sizing: border-box;
+        position: fixed;
+          align-items: center;
+          z-index: 10;
+          bottom: 0;
+        margin: 0 2px 2px 0; /* Optional: Adds slight space between each message box */
+        border-top-left-radius: var(--border-radius-for-chat-box);
+        border-top-right-radius: var(--border-radius-for-chat-box);
+        box-shadow: 0px 25px 20px 0 var(--color-primary);
+      }
     .container {
         width: 96%;
     }

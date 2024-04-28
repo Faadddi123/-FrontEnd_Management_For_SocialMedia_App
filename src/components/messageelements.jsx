@@ -29,7 +29,7 @@ async function fetchUsers() {
 
   
   
-  function MessagesComponent() {
+  function MessagesComponent({ onAddMessageBox }) {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
   

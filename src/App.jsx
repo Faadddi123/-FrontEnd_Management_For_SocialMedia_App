@@ -287,25 +287,33 @@ function App() {
     <Routes>
       <Route path="/login" element={
       <main>
-        <div className="container">
-          <div className="middle">
+
+          <div className='Login'>
+            <div className='card'>
 
             <LittleLoginForm />
+            </div>
           </div>
-
-
-        </div>
 
       </main>
       } />
-      <Route path="/register" element={<LittleRegisterForm />} />
+      <Route path="/register" element={
+        <main>
+          <div className='Register'>
+            <div className='card'>  
+              <LittleRegisterForm />
+            </div>
+          </div>
+        </main>
+      
+      } />
       <Route path="/messages" element={<Messageform />} />
       <Route path="/" element={<Navigate replace to="/login" />} />
       <Route path="/message" element={
         <div className="container">
-          <div className="row " style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="row" style={{ display: 'flex', justifyContent: 'space-between' }}>
             {messageBoxes.map((box, index) => (
-              <div key={box.key} className="col-md-3 message-box" style={{ order: index * (-1) }}>
+              <div key={box.key} className="message-box" style={{ order: index * (-1) }}>
                 <MessageBox initialReceiverId={box.userId} componentKey={box.key} />
               </div>
             ))}
@@ -335,7 +343,13 @@ function App() {
         <>
         <ThemeModalProvider>
           <main>
-            
+          <div className="row">
+            {messageBoxes.map((box, index) => (
+              <div key={box.key}  className={`message-box col-${index + 1}`}>
+                <MessageBox initialReceiverId={box.userId} componentKey={box.key} />
+              </div>
+            ))}
+          </div>
             <div className="container">
               <div className="left">
                 <Profile_name />
@@ -390,7 +404,7 @@ function App() {
           </div>
           <div className='shared-post original-shared'>
           <PostForm key={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} id
-                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId} for_sharing = {true}  onShare={() => handleShare(currentPostId)} />
+                ={0.5*(currentPostId.id + currentPostId.partage_id)*(currentPostId.id + currentPostId.partage_id +  1) + currentPostId.partage_id} HaveShare = {false} Content={currentPostId} would_display_image = {true}  onShare={() => handleShare(currentPostId)} />
           </div>
           {/* <div className="photo">
               <img src="./images/profile-13.jpg" alt="Profile" />

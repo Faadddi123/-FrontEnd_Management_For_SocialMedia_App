@@ -62,7 +62,7 @@ async function handlePostComment(id, setComments, user) {
   }
 }
 function Feed(props) {
-    const { Content, onShare, id, HaveShare, partaged_iiiid , user , for_sharing} = props;
+    const { Content, onShare, id, HaveShare, partaged_iiiid , user , would_display_image} = props;
     const [content, setContent] = useState(Content);
     const [comments, setComments] = useState([]);
     const [commentVisibility, setCommentVisibility] = useState({});
@@ -79,8 +79,9 @@ function Feed(props) {
   };
 
 useEffect(() => {
-    if (content.element_type !== 'nothing' && content.element_path !== 'nothing' && (HaveShare || for_sharing)) {
-        fetch(`http://localhost/api/media/checkback/${content.element_path}`, {
+    if ((content.element_type !== 'nothing' && content.element_path !== 'nothing') && (!partaged_iiiid  || would_display_image)) {
+        if(content.element_type == 1){
+          fetch(`http://localhost/api/media/checkback/${content.element_path}`, {
             headers: {
                 'Authorization': `Bearer ${Cookies.get('token')}`,
             },
@@ -92,6 +93,20 @@ useEffect(() => {
             console.log('Deployment successful:', url);
         })
         .catch(error => console.error('Error fetching media:', error));
+        }else if(content.element_type == 2){
+          fetch(`http://localhost/api/media/videoback/${content.element_path}`, {
+            headers: {
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+        })
+        .then(response => response.blob()) // Handling the response as
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            setImageUrl(url); // Set the image URL for 
+            console.log('Deployment successful:', url);
+        })
+        .catch(error => console.error('Error fetching media:', error));
+        }
     }
 }, [content.element_type, content.element_path]);
     useEffect(() => {
@@ -132,8 +147,7 @@ useEffect(() => {
                 </span>
             </div>
             <div className="post-text">
-              {partaged_iiiid ? content.text : content.content_text}
-              {content.element_type == 'nothing' ? "hhhhhhhhhhh" : "nnnnnn"}
+            {partaged_iiiid ? content.text : (content.content_text === "nothing" ? null : content.content_text)}              
 
             </div>
             {partaged_iiiid ?
@@ -152,10 +166,13 @@ useEffect(() => {
             : null}
             
             <div className="photo">
-                {content.element_path && HaveShare ? 
-                 <img src={imageUrl} alt="Feed"/>
-                :
-                null }
+            {content.element_path && (!partaged_iiiid || would_display_image) ? (
+                content.element_type == 1 ? 
+                <img src={imageUrl} alt="Feed" /> :
+                content.element_type == 2 ?
+                <video src={imageUrl} controls alt="Feed Video" /> :
+                null
+            ) : null}
                 
  
             </div>
@@ -169,7 +186,7 @@ useEffect(() => {
                             <span  onClick={(e) => { e.preventDefault(); onShare(); }}><i className="uil uil-share-alt"></i></span>
                         </div>
                         <div className="bookmark">
-                            <span><i className="uil uil-bookmark-full"></i></span>
+                            <span><i className="uil uil-bookmark-full" ></i></span>
                         </div>
                     </>
                 )}
