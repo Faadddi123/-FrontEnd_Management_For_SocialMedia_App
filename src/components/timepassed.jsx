@@ -2,6 +2,7 @@ import React from 'react';
 
 function timepassed(updated_at) {
     function getTimeAgoText(updatedTime) {
+        console.log(updatedTime);
         const currentTime = new Date();
         const timeDifference = currentTime - new Date(updatedTime);
         const minutesAgo = Math.floor(timeDifference / 60000);

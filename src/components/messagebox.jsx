@@ -8,6 +8,7 @@ function MessageBox({ initialReceiverId, componentKey }) {
     const [inputText, setInputText] = useState('');
     const [receiverId, setReceiverId] = useState(initialReceiverId);
     const [username, setUsername] = useState('');
+    const [lastSentMessageId, setLastSentMessageId] = useState(null);
   const handleClose = () => {
     setIsVisible(false);
   };
@@ -36,22 +37,16 @@ useEffect(() => {
     const chatBoxSelector = `.hide-chat-box${componentKey}`;
     $(chatBoxSelector).on('click', toggleChat);
 
-    // Cleanup function to remove the event listener when the component unmounts
+    // Cleanup function to remove the event listener wthe component unmounts
     return () => {
         $(chatBoxSelector).off('click', toggleChat);
     };
 }, [componentKey]); // Added componentKey as a dependency to re-bind if it changes
 
 
-  useEffect(() => {
-        
+useEffect(() => {
     const loadMessages = async () => {
         const token = Cookies.get('token');
-        // console.log(Cookies.get('userId'));
-        // if (initialReceiverId === Cookies.get('userId')){
-        //     setReceiverId(3);
-        //     console.log(receiverId);
-        // }
         try {
             const response = await fetch('http://localhost/api/loadingmessages', {
                 method: 'POST',
@@ -60,22 +55,32 @@ useEffect(() => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    other_user_id: receiverId // Include receiver_id ine payload
+                    other_user_id: receiverId
                 })
             });
             if (!response.ok) {
                 throw new Error('Failed to load messages');
             }
             const loadedMessages = await response.json();
-            // console.log(loadMessages);
             setMessages(loadedMessages.reverse());
+            if (loadedMessages.length > 0) {
+                setLastSentMessageId(loadedMessages[0].id); // Assuming the latest message is at index 0 after reverse
+            }
         } catch (error) {
             console.error('Error loading messages:', error);
         }
     };
 
-    loadMessages();
-}, []);
+    loadMessages(); // Initial load
+
+    const intervalId = setInterval(() => {
+        if (lastSentMessageId !== null) {
+            loadMessages(); // Start polling only if lastSentMessageId is set
+        }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+}, [receiverId, lastSentMessageId]);
 
 async function getUsername(id) {
   const token = Cookies.get('token'); // Ensure you have qsddsaccess to 'Cookies'
@@ -98,39 +103,37 @@ async function getUsername(id) {
   }
 }
 
+
+
 const handleSend = async () => {
     const token = Cookies.get('token');
     if (inputText.trim() !== '') {
         const newMessage = {
-            id: messages.length + 2,
+            id: messages.length + 1, // Assuming IDs are sequential
             text: inputText,
-            sender: 'Sender' ,
-            receiver_id: receiverId ,// Assuming you have this value set appropriately
+            sender: 'Sender',
+            receiver_id: receiverId,
             sender_id: Cookies.get('userId')
         };
         setMessages([...messages, newMessage]);
-        // console.log(messages);
         setInputText('');
-        console.log(Cookies.get('userId'));
         try {
             const response = await fetch('http://localhost/api/sendmessage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Replace `yourAuthToken` the actual token
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     message: newMessage.text,
-                    receiver_id: newMessage.receiver_id // Include receiver_id in the payl
+                    receiver_id: newMessage.receiver_id
                 })
             });
-            // console.log(token);
             if (!response.ok) {
                 throw new Error('Failed to send message');
             }
-
             const responseData = await response.json();
-            console.log('Message sent successfully:', responseData);
+            setLastSentMessageId(responseData.id); // Update last sent message ID
         } catch (error) {
             console.error('Error sending message:', error);
         }

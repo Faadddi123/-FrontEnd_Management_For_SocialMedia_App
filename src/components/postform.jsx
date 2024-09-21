@@ -35,6 +35,39 @@ function fetchCommentsForDisplayedId(displayedId, setComments, setCommentVisibil
   .catch(error => console.error('Error fetching comments:', error));
 }
 
+
+async function fetchUserProfilePic(user_name) {
+
+    const token = Cookies.get('token');
+    if (!token) {
+        console.error('No token available');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost/api/getUserProfilePicUsingName/${user_name}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob(); 
+        const url = URL.createObjectURL(blob); 
+        return url; 
+    } catch (error) {
+        console.error('Error fetching user profile picture:', error);
+        return null; 
+    }
+}
+
+
+
 async function handlePostComment(id, setComments, user) {
   console.log(user);
   const textareaElement = document.querySelector(`#textarea-${id}`);
@@ -62,22 +95,48 @@ async function handlePostComment(id, setComments, user) {
   }
 }
 function Feed(props) {
-    const { Content, onShare, id, HaveShare, partaged_iiiid , user , would_display_image} = props;
+    const { Content, onShare, id, HaveShare, partaged_iiiid , user , would_display_image , ShowProfilFor} = props;
     const [content, setContent] = useState(Content);
     const [comments, setComments] = useState([]);
     const [commentVisibility, setCommentVisibility] = useState({});
     const [loadCount, setLoadCount] = useState(0);
     const [activeHearts, setActiveHearts] = useState({}); 
     const [imageUrl, setImageUrl] = useState('');
+    const [ProfileUrl, setProfileUrl] = useState(null);
 
-
+  
+    async function SavethePost(id){
+      console.log(id);
+      const token = Cookies.get('token');
+      try {
+        const response = await fetch('http://localhost/api/putacomment', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text: commentText, displayed_id: id })
+        });
+        const data = await response.json();
+        console.log('Comment posted:', data);
+      } catch (error) {
+        console.error('Error posting comment:', error);
+      }
+    } 
     const toggleHeartActive = (contentId) => {
       setActiveHearts(prevState => ({
           ...prevState,
           [contentId]: !prevState[contentId]
       }));
   };
+  useEffect(() => {
+    async function loadImage() {
+        const url = await fetchUserProfilePic(!partaged_iiiid ? content.original_user_name : content.user_name);
+        setProfileUrl(url);
+    }
 
+    loadImage();
+}, [content.user_id]);
 useEffect(() => {
     if ((content.element_type !== 'nothing' && content.element_path !== 'nothing') && (!partaged_iiiid  || would_display_image)) {
         if(content.element_type == 1){
@@ -86,10 +145,10 @@ useEffect(() => {
                 'Authorization': `Bearer ${Cookies.get('token')}`,
             },
         })
-        .then(response => response.blob()) // Handling the response as
+        .then(response => response.blob()) 
         .then(blob => {
             const url = URL.createObjectURL(blob);
-            setImageUrl(url); // Set the image URL for 
+            setImageUrl(url);
             console.log('Deployment successful:', url);
         })
         .catch(error => console.error('Error fetching media:', error));
@@ -99,10 +158,10 @@ useEffect(() => {
                 'Authorization': `Bearer ${Cookies.get('token')}`,
             },
         })
-        .then(response => response.blob()) // Handling the response as
+        .then(response => response.blob()) 
         .then(blob => {
             const url = URL.createObjectURL(blob);
-            setImageUrl(url); // Set the image URL for 
+            setImageUrl(url); 
             console.log('Deployment successful:', url);
         })
         .catch(error => console.error('Error fetching media:', error));
@@ -129,12 +188,12 @@ useEffect(() => {
     return (
         <div className="feed">
             <div className="head">
-                <div className="user">
+                <div className="user" onClick={() => ShowProfilFor(!partaged_iiiid ? content.original_user_name : content.user_name)}>
                     <div className="profile-photo">
-                        <img src="./images/profile-13.jpg" alt="Profile"/>
+                        <img src={ProfileUrl} alt="Profile"/>
                     </div>
                     <div className="info">
-                        <h3>{partaged_iiiid ? content.original_user_name : content.user_name}</h3>
+                        <h3>{!partaged_iiiid ? content.original_user_name : content.user_name}</h3>
                         <small>          
                             <Timepassed key={content.updated_at} updated_at={partaged_iiiid ? content.partaged_updated_at : content.updated_at}/>
                         </small>
@@ -160,6 +219,7 @@ useEffect(() => {
                     Content={content}
                     id={0.5 * (content.id + content.partage_id) * (content.id + content.partage_id + 1) + content.partage_id}
                     onShare={() => onShare(content)}
+                    ShowProfilFor = {ShowProfilFor}
                     />
                 
             </div>
@@ -185,7 +245,7 @@ useEffect(() => {
                             <span   onClick={() => handleToggleComment(id)}><i className="uil uil-comment-dots"></i></span>
                             <span  onClick={(e) => { e.preventDefault(); onShare(); }}><i className="uil uil-share-alt"></i></span>
                         </div>
-                        <div className="bookmark">
+                        <div className="bookmark" onClick={() => SavethePost(content.id)}>
                             <span><i className="uil uil-bookmark-full" ></i></span>
                         </div>
                     </>
@@ -209,7 +269,7 @@ useEffect(() => {
                 <a className="cursor-pointer">
                 {!commentVisibility[id] && (
                   <div className="comments text-muted" onClick={(e) => { e.preventDefault(); fetchCommentsForDisplayedId(content.displayed_id, setComments, setCommentVisibility); }}>
-                    View all 277 comments
+                    View the comments
                       
                   </div>
                 )}

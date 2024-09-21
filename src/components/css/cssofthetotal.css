@@ -82,6 +82,7 @@ body {
 img {
     display: block;
     width: 100%;
+    
 }
 
 .btn {
@@ -551,7 +552,7 @@ main .container .left .profile {
     border-radius: 0;
     overflow: hidden;
     margin: 0.7rem 0;
-  /* Added border property */
+  
 }
 .middle .feed .cursor-pointer {
     cursor: pointer;
@@ -562,7 +563,7 @@ main .container .left .profile {
 
 .middle .feed .cursor-pointer:hover {
     text-decoration: underline;
-    text-decoration-color: currentColor; /* This will use the text's current color for the underline */
+    text-decoration-color: currentColor;
 }
 .middle .feed .action-buttons ,.overlay .feed .action-buttons{
     display: flex;
@@ -596,6 +597,7 @@ main .container .left .profile {
 .overlay .feed .Input-for-overlay {
     width: 85%;       
     background: none;  
+    background-color: var(--color-light);
     color: var(--color-dark);
     border-top-right-radius: var(--card-border-radius);
     border-bottom-right-radius: var(--card-border-radius);
@@ -603,9 +605,84 @@ main .container .left .profile {
     margin-bottom: 1rem; 
     height: 2rem;
     /* border: 1px solid ; */
-    box-shadow: -4px -4px 7px 0 var(--color-dark); /* Added shadow */
+    /* box-shadow: -4px -4px 7px 0 var(--color-dark); */
+}
+/* =============================== Profile card================================ */
+.profil-card {
+    height: 200px;
+    border-radius: 15px;
+    width: 100%;
+    background-color: var(--color-white);
 }
 
+.profil-card .profil-text {
+    background-color: var(--color-white);
+    height: 80px;
+    border-radius: 15px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.profil-card .profil-text .text-info {
+    position: absolute;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.profil-card .profil-text .text-info p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+}
+
+.profil-card .profil-text .text-info .userid {
+    font-weight: 400;
+}
+
+.profil-card .cover-profil {
+    border-radius: 15px;
+}
+
+.profil-card .cover-profil img {
+    height: 120px;
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;  
+    
+}
+
+.profil-card .avatar-profil {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -65%;
+    left: 5%;
+}
+
+@media (max-width: 767.98px) {
+    .profil-card .cover-profil img {
+        height: 120px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .profil-card .avatar-profil {
+        height: auto;
+        width: 50px;
+        border-radius: 50%;
+        position: absolute;
+        top: -45%;
+        left: 5%;
+        font-size: 10px;
+    }
+
+    .profil-card .profil-text .text-info {
+        font-size: 10px;
+    }
+}
+    /* ============================== end ===========================*/
 .middle .liked-by ,.overlay .liked-by{
     display: flex;
 }
@@ -675,7 +752,7 @@ main .container .left .profile {
 .comments_displayed {
     flex-grow: 1;
     border-top: 1px solid #ddd;
-    /* border-bottom: 1px solid #dqsdsq dd; */
+    
     padding-top: 10px;
     width: 100%;
     box-sizing: border-box;
@@ -697,7 +774,7 @@ main .container .left .profile {
 .comment-content {
     display: flex;
     align-items: center;
-    gap: 10px; /* Adjust thqsdqsdqe gap as needed */
+    gap: 10px; 
 }
 .comment .desc {
     width: 150px;
@@ -739,8 +816,8 @@ main .container .left .profile {
     outline: none;
     border: none;
     background: transparent;
-    color: var(--color-primary); /* Example of using a color variable */
-    font-size: var(--font-size); /* Hypothetical variable for font size */
+    color: var(--color-primary); 
+    font-size: var(--font-size); 
 }
 
 #comment:checked ~ .post-comment {
@@ -1067,29 +1144,29 @@ main .container .right {
 .Login .card input , .Register .card input{
     width: 100%; 
     padding: 0.8rem 1rem; 
-    font-size: 1rem; /* Adequate font size for readability */
-    border: 2px solid var(--color-primary); /* Border color using primary color variable */
-    border-radius: var(--card-border-radius); /* Consistent border-radius with the card */
-    background: var(--color-white); /* Background color */
-    outline: none; /* Removes the default focus outline */
-    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus effects */
+    font-size: 1rem; 
+    border: 2px solid var(--color-primary); 
+    border-radius: var(--card-border-radius); 
+    background: var(--color-white); 
+    outline: none; 
+    transition: border-color 0.3s, box-shadow 0.3s; 
 }
 
 
 .Login .card input:focus , .Register .card input:focus{
-    border-color: var(--color-primary-light); /* Lighter primary color for focus */
-    box-shadow: 0 0 8px var(--color-primary-glow); /* Glowing effect on focus */
+    border-color: var(--color-primary-light); 
+    box-shadow: 0 0 8px var(--color-primary-glow); 
 }
 .Login .card button , .Register .card button{
-    padding: 0.8rem 1.5rem; /* Comfortable padding */
-    font-size: 1rem; /* Adequate font size for readability */
-    color: var(--color-white); /* Text color */
-    background-color: var(--color-primary); /* Button background color */
-    border: none; /* No border */
-    border-radius: var(--card-border-radius); /* Consistent border-radius with the card */
-    cursor: pointer; /* Pointer cursor on hover */
+    padding: 0.8rem 1.5rem; 
+    font-size: 1rem; 
+    color: var(--color-white); 
+    background-color: var(--color-primary); 
+    border: none; 
+    border-radius: var(--card-border-radius); 
+    cursor: pointer; 
     outline: none; 
-    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover and focus effects */
+    transition: background-color 0.3s, box-shadow 0.3s; /**/
 }
 
 .Login .card button:hover, .Login button:focus , .Register .card button:hover , .Register button:focus{
@@ -1099,11 +1176,11 @@ main .container .right {
 .Register .card {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Adds space between inputs */
+    gap: 1rem; 
 }
 
 .Register .card input[type="file"] {
-    display: none; /* Hides the default file input */
+    display: none;
 }
 
 .Register .card label[for="file-upload"] {

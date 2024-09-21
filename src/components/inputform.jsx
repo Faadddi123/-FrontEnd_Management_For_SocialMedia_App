@@ -1,10 +1,8 @@
-import React, { useState , useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 
 async function getUserinfo(id) {
-    const token = Cookies.get('token'); // Ensure you have qsddsaccess to 'Cookies'
-
+    const token = Cookies.get('token');
     try {
         const response = await fetch(`http://localhost/api/getuserinfo/${id}`, {
             method: 'GET',
@@ -17,15 +15,14 @@ async function getUserinfo(id) {
             throw new Error('Failed to fetch userinfo');
         }
         const data = await response.json();
-        console.log(data);
-        return data; // This will return the fetched data
+        return data;
     } catch (error) {
         console.error('Error fetching userinfo:', error);
+        throw error; 
     }
-  }
+}
 
-
-function CreatePost({ onPostSuccess }) {
+function Inputform({ profilePic, onPostSuccess }) {
     const [postContent, setPostContent] = useState('');
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
@@ -34,67 +31,57 @@ function CreatePost({ onPostSuccess }) {
         setPostContent(event.target.value);
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const token = Cookies.get('token');
+        const formData = new FormData();
+
+        if (file) {
+            formData.append('media', file);
+        }
+        if (postContent.trim()) {
+            formData.append('content_text', postContent);
+        }
+
+        try {
+            const response = await fetch('http://localhost/api/importapost', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const responseData = await response.json();
+
+            const userinfo = await getUserinfo(responseData.post.user_id);
+            let userInfoCopy = { ...userinfo };
+            delete userInfoCopy.id;
+            responseData.post.displayed_id = responseData.displayed.id;
+            Object.assign(responseData.post, userInfoCopy);
+            onPostSuccess(responseData.post);
+            handleClearingText();
+        } catch (error) {
+            console.error('Error posting data:', error);
+        }
+    };
+
     const handleFileChange = (event) => {
-        setFile(event.target.files[0]); // Capture the first file
+        setFile(event.target.files[0]);
     };
 
     const handleIconClick = () => {
-        fileInputRef.current.click(); // Programmatically click the hidden file input
+        fileInputRef.current.click();
     };
 
-    const handleClearingText = async () => {
+    const handleClearingText = () => {
         setPostContent('');
         setFile(null);
-    }
-
-    const handleSubmit = async (event) => {
-    event.preventDefault();
-    const token = Cookies.get('token');
-    const formData = new FormData();
-
-    if (file) {
-        formData.append('media', file);
-    }
-    if (postContent.trim()) {
-        formData.append('content_text', postContent);
-    }
-
-    console.log(postContent);
-   
-
-    try {
-        const response = await fetch('http://localhost/api/importapost', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const responseData = await response.json();
-        console.log(responseData);
-
-        const userinfo = await getUserinfo(responseData.post.user_id);
-        let userInfoCopy = { ...userinfo };
-        delete userInfoCopy.id;
-        responseData.post.displayed_id = responseData.displayed.id;
-        Object.assign(responseData.post, userInfoCopy);
-        const postinfo = responseData.post;
-        console.log(postinfo);
-        onPostSuccess(postinfo);
-        handleClearingText();
-    } catch (error) {
-        console.error('Error posting data:', error);
-
-        if (error.response) {
-            console.error('Full error response:', error.response);
-        }
-    }
-};
+    };
 
     return (
         <form onSubmit={handleSubmit} className="create-post">
             <div className="profile-photo">
-                <img src="./images/profile-1.jpg" alt="Profile" />
+                <img src={profilePic} alt="Profile" />
             </div>
             <input
                 type="text"
@@ -117,4 +104,4 @@ function CreatePost({ onPostSuccess }) {
     );
 }
 
-export default CreatePost;
+export default Inputform;

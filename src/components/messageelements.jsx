@@ -2,6 +2,10 @@ import React , {useEffect , useState} from 'react';
 import Messagetexted from './elements/messagetext';
 import Cookies from 'js-cookie';
 
+
+
+
+
 async function fetchUsers() {
     const token = Cookies.get('token');
     console.log(token);
@@ -9,7 +13,7 @@ async function fetchUsers() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        'Authorization': `Bearer ${token}` 
       }
     });
   
@@ -17,7 +21,7 @@ async function fetchUsers() {
       throw new Error('Network response was not ok');
     }
   
-    return await response.json(); // Assuming the server responds with JSON
+    return await response.json(); 
   }
   
   fetchUsers().then(data => {
@@ -27,8 +31,6 @@ async function fetchUsers() {
   });
 
 
-  
-  
   function MessagesComponent({ onAddMessageBox }) {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -45,7 +47,11 @@ async function fetchUsers() {
         })
         .catch(error => console.error('Error fetching users:', error));
     }, []);
-  
+    
+
+
+
+
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value.toLowerCase());
     };
@@ -72,8 +78,7 @@ async function fetchUsers() {
         </div>
         <div className="category">
           <h6 className="active">Primary</h6>
-          <h6>General</h6>
-          <h6 className="message-requests">Requests (7)</h6>
+          
         </div>
         {filteredUsers.map(user => (
           <Messagetexted key={user.id} user={user} onAddMessageBox={() => onAddMessageBox(user.id)} />

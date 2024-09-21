@@ -1,15 +1,21 @@
-import React from 'react';
+import React , {useState  , useEffect} from 'react';
 
-function Profile() {
+function Profile(props) {
+    const [profilePic , setProfilePic] = useState('');
+
+    useEffect(() => {
+        console.log(props);
+        setProfilePic(props.profilePic);
+    }, [props.profilePic])
     return (
         <a className="profile">
             <div className="profile-photo">
-                <img src="./images/profile-1.jpg" alt="Profile" />
+                <img src={profilePic} alt="Profile" />
             </div>
             <div className="handle">
-                <h4>Nia Ridania</h4>
+                <h4>{props.username}</h4>
                 <p className="text-muted">
-                    @niaridania
+                    @{props.username}
                 </p>
             </div>
         </a>
